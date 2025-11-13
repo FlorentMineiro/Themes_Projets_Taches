@@ -67,7 +67,43 @@ public class TP3Controller implements Initializable {
         } else if (txtNomTache.getText().isEmpty()) {
             alert.setHeaderText("Veuillez saisir une tâche");
             alert.showAndWait();
+        }else
+        {
+            Tache tache = new Tache(txtNomTache.getText(),
+            cboDeveloppeurs.getSelectionModel().getSelectedItem().toString(),
+            false);
+
+            if (!mesTaches.containsKey(lstThemes.getSelectionModel().getSelectedItem().toString()))
+            {
+                mesTaches.put(lstThemes.getSelectionModel().getSelectedItem().toString(),new HashMap<>());
+            }
+            if (!mesTaches.get(lstThemes.getSelectionModel().getSelectedItem().toString()).
+                    containsKey(lstProjets.getSelectionModel().getSelectedItem().toString()))
+            {
+                mesTaches.get(lstThemes.getSelectionModel().getSelectedItem().toString()).
+                        put(lstProjets.getSelectionModel().getSelectedItem().toString(),new ArrayList<>());
+
+            }
+            mesTaches.get(lstThemes.getSelectionModel().getSelectedItem().toString()).
+                    get(lstProjets.getSelectionModel().getSelectedItem().toString()).add(tache);
+
         }
+        affichageTreeView();
+
+
+    }
+    public void affichageTreeView()
+    {
+        TreeItem noeudTheme;
+
+        for (String noeudThemeExist : mesTaches.keySet())
+        {
+            noeudTheme = new TreeItem<>(noeudThemeExist);
+            racine.getChildren().add(noeudTheme);
+        }
+
+
+        tvTaches.setRoot(racine);
     }
 
     @FXML
