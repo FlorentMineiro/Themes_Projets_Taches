@@ -13,6 +13,7 @@ import sio.tp3.Model.Tache;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class TP3Controller implements Initializable {
@@ -95,10 +96,26 @@ public class TP3Controller implements Initializable {
     public void affichageTreeView()
     {
         TreeItem noeudTheme;
+        TreeItem noeudProjet;
+        TreeItem noeudTache;
+
 
         for (String noeudThemeExist : mesTaches.keySet())
         {
             noeudTheme = new TreeItem<>(noeudThemeExist);
+            for (String noeudProjetExist : mesTaches.get(lstThemes.getSelectionModel().getSelectedItem().toString()).
+            keySet())
+            {
+                noeudProjet =new TreeItem<>(noeudProjetExist);
+                for (Tache tacheExist :mesTaches.get(lstThemes.getSelectionModel().getSelectedItem().toString()).
+                get(lstProjets.getSelectionModel().getSelectedItem().toString()))
+                {
+                    noeudTache = new TreeItem<>(tacheExist.getNomDeveloppeur()+" : "+tacheExist.getNomTache()+" : "+tacheExist.isEstTerminee());
+                    noeudProjet.getChildren().add(noeudTache);
+                }
+                noeudTheme.getChildren().add(noeudProjet);
+            }
+
             racine.getChildren().add(noeudTheme);
         }
 
@@ -109,6 +126,32 @@ public class TP3Controller implements Initializable {
     @FXML
     public void tvTachesClicked(Event event)
     {
+        TreeItem noeudClique = (TreeItem) tvTaches.getSelectionModel().getSelectedItem();
 
+        if (noeudClique != null)
+        {
+            if (noeudClique.getChildren().isEmpty())
+            {
+
+                String parentProjet = noeudClique.getParent().getValue().toString();
+                String parentTheme = noeudClique.getParent().getParent().getValue().toString();
+
+
+
+                if (mesTaches.get(parentTheme).get(parentProjet) != null)
+                {
+                    for (Tache t : mesTaches.get(parentTheme).get(parentProjet))
+                    {
+
+                            t.setEstTerminee(!t.isEstTerminee());
+
+                    }
+                }
+
+                    affichageTreeView();
+
+            }
+
+        }
     }
 }
