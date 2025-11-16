@@ -99,6 +99,8 @@ public class TP3Controller implements Initializable {
         TreeItem noeudProjet;
         TreeItem noeudTache;
 
+        racine.getChildren().clear();
+
 
         for (String noeudThemeExist : mesTaches.keySet())
         {
@@ -126,28 +128,35 @@ public class TP3Controller implements Initializable {
     @FXML
     public void tvTachesClicked(Event event)
     {
+        //Déclaration d'un noeud global de la tree view
         TreeItem noeudClique = (TreeItem) tvTaches.getSelectionModel().getSelectedItem();
 
+        //Vérification de l'existence du noeud
         if (noeudClique != null)
         {
+            //Vérification du nombre d'enfants nécéssaire
             if (noeudClique.getChildren().isEmpty())
             {
 
+                //Dclaration parents
                 String parentProjet = noeudClique.getParent().getValue().toString();
                 String parentTheme = noeudClique.getParent().getParent().getValue().toString();
 
 
-
+                //Vérifications si le noeud spécifique est bien située
                 if (mesTaches.get(parentTheme).get(parentProjet) != null)
                 {
+                    //Les changements spécifiques
                     for (Tache t : mesTaches.get(parentTheme).get(parentProjet))
                     {
-
+                        if (t.getNomDeveloppeur().equals(noeudClique.getValue().toString().split(" : ")[0]) &&
+                        t.getNomTache().equals(noeudClique.getValue().toString().split(" : ")[1]))
+                        {
                             t.setEstTerminee(!t.isEstTerminee());
-
+                        }
                     }
                 }
-
+                    //appelle de la méthode TreeView
                     affichageTreeView();
 
             }
